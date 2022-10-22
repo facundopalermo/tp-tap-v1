@@ -17,14 +17,12 @@ return new class extends Migration
             $table->id();
             $table->string('name',50);
             $table->string('surname',50);
-            $table->integer('dni', false, true)->unique();
+            $table->bigInteger('dni', false, true)->unique();
             $table->string('email')->unique();
             $table->string('address');
             $table->string('phone');
-            $table->boolean('glasses');
-            $table->timestamp('email_verified_at')->nullable();
+            $table->boolean('glasses')->nullable();
             $table->string('password');
-            $table->rememberToken();
             $table->timestamps();
         });
     }

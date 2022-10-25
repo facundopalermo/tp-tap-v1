@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('phone');
             $table->boolean('glasses')->nullable();
             $table->string('password');
+            $table->boolean('isAdmin')->default(false);
             $table->timestamps();
         });
     }

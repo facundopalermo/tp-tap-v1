@@ -44,6 +44,16 @@ class User extends Authenticatable
         );
     }
 
+    protected function surname(): Attribute {
+        return new Attribute(
+            get: fn($value) => ucwords($value),
+
+            set: function($value){
+                return strtolower($value);
+            }
+        );
+    }
+
     public function password(): Attribute {
         return new Attribute(set: fn ($value) => Hash::make($value));
     }

@@ -42,7 +42,7 @@ class AuthController extends Controller
             $cookie = cookie('cookie_token', $token, 60 * 24);
             return response(["token"=>$token], Response::HTTP_OK)->withoutCookie($cookie);
         } else {
-            return response(["message" => "Las credenciales suministradas son invalidas"],Response::HTTP_UNAUTHORIZED);
+            return response(["message" => "Usuario o contraseña invalido "],Response::HTTP_UNAUTHORIZED);
         }
     }
 

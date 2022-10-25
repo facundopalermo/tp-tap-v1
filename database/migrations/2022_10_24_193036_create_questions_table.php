@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Answers;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +16,6 @@ return new class extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
             $table->string('text');
-            $table->foreignIdFor(Answers::class);
             $table->timestamps();
         });
     }

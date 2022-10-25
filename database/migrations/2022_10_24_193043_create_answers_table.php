@@ -14,8 +14,19 @@ return new class extends Migration
     public function up()
     {
         Schema::create('answers', function (Blueprint $table) {
+
             $table->id();
+
+            $table->foreignId('question_id')
+                  ->nullable()
+                  ->constrained('questions')
+                  ->cascadeOnUpdate()
+                  ->cascadeOnDelete();
+
             $table->string('text');
+            
+            $table->boolean('isCorrect');
+
             $table->timestamps();
         });
     }

@@ -9,7 +9,7 @@ class Answer extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['text', 'isCorrect'];
+    protected $fillable = ['text', 'isCorrect', 'question_id'];
 
     public function questions() {
         return $this->belongsTo((Question::class));

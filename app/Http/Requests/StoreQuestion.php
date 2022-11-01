@@ -27,10 +27,10 @@ class StoreQuestion extends FormRequest
     public function rules()
     {
         return [
-            'text' => 'required',
+            'text' => 'required|string',
             'answers' => 'array|required',
-            'answers.*.text' => 'required',
-            'answers.*.isCorrect' => 'required|required'
+            'answers.*.text' => 'required|string',
+            'answers.*.isCorrect' => 'required|boolean'
         ];
     }
 

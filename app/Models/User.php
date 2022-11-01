@@ -57,4 +57,12 @@ class User extends Authenticatable
     public function password(): Attribute {
         return new Attribute(set: fn ($value) => Hash::make($value));
     }
+
+    public function attempts() {
+        return $this->hasMany(Attempt::class);
+    }
+
+    public function appointments () {
+        return $this->hasMany(Appointment::class);
+    }
 }

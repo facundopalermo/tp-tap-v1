@@ -11,6 +11,8 @@ class Answer extends Model
 
     protected $fillable = ['text', 'isCorrect', 'question_id'];
 
+    protected $hidden = ['created_at', 'updated_at', 'isCorrect', 'question_id'];
+
     public function question() {
         return $this->belongsTo(Question::class);
     }

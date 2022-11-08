@@ -21,9 +21,9 @@ return new class extends Migration
                   ->cascadeOnUpdate()
                   ->cascadeOnDelete();
             $table->json('quiz');
-            $table->json('answered');
-            $table->string('accesskey');
-            $table->string('result');
+            $table->json('answered')->nullable();
+            $table->string('accesskey')->nullable();
+            $table->string('result')->nullable();
             $table->timestamps();
         });
     }

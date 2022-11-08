@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AccessKeyController;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AnswerController;
 use App\Http\Controllers\Api\AuthController;
@@ -20,6 +21,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('user-profile', [AuthController::class, 'userProfile']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('customers/glasses', [CustomerController::class, 'setGlasses']);
+    Route::post('customers/quiz', [CustomerController::class, 'newQuiz']);
+    Route::post('customers/accesskey', [AccessKeyController::class, 'store']);
     
     Route::group(['middleware' => 'admin'], function () {
         Route::get('statistics', [AdminController::class, 'getStatistics']);

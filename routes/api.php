@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AccessKeyController;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AnswerController;
+use App\Http\Controllers\Api\AttemptController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\QuestionController;
@@ -17,13 +18,22 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    /* usuario */
+    
+    /* USUARIO */
     Route::get('user-profile', [AuthController::class, 'userProfile']);
     Route::post('logout', [AuthController::class, 'logout']);
+
     Route::post('customers/glasses', [CustomerController::class, 'setGlasses']);
-    Route::post('customers/quiz', [CustomerController::class, 'newQuiz']);
+
+    Route::get('customers/accesskey', [AccessKeyController::class, 'index']);
     Route::post('customers/accesskey', [AccessKeyController::class, 'store']);
+
+    Route::get('customers/attempts', [AttemptController::class, 'index']);
+    Route::post('customers/attempts', [AttemptController::class, 'newAttempt']);
+    Route::get('customers/attempts/{attempt}', [AttemptController::class, 'getAttempt']);
+    Route::post('customers/attempts/{id}', [AttemptController::class, 'answerQuiz']);
     
+    /* ADMIN */
     Route::group(['middleware' => 'admin'], function () {
         Route::get('statistics', [AdminController::class, 'getStatistics']);
     

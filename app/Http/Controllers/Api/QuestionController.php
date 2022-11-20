@@ -9,15 +9,24 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\StoreQuestion;
 use App\Models\Answer;
 
+/**
+ * Clase controlador de Preguntas
+ */
 class QuestionController extends Controller
 {
 
+    /**
+     * Mustra todas las preguntas con sus posibles respuestas
+     */
     public function index()
     {
         $questions = Question::with('answers')->get(['id', 'text']);
         return response($questions, Response::HTTP_OK);
     }
 
+    /**
+     * Crea una nueva pregunta, admite array de respuestas para cada pregunta
+     */
     public function store(StoreQuestion $request)
     {
         $question = Question::create([
@@ -35,12 +44,17 @@ class QuestionController extends Controller
         return response($question, Response::HTTP_CREATED);
     }
 
+    /**
+     * Muestra una pregunta en particular
+     */
     public function show($id)
     {
         return Question::findOrFail($id);
-
     }
 
+    /**
+     * Actualiza una pregunta. Solo el texto
+     */
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -54,6 +68,9 @@ class QuestionController extends Controller
         return response()->json(['updated' => $question], Response::HTTP_ACCEPTED);
     }
 
+    /**
+     * Elimina una pregunta
+     */
     public function destroy($id)
     {
         Question::findOrFail($id)->delete();

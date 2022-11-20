@@ -10,19 +10,31 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AccessKeyController extends Controller
 {
+    /**
+     * Retorna, si existe, una accesskey vigente creada
+     */
     public function index()
     {
-        //
+        $user = auth()->user();
+        $key = AccessKey::recent()->where('user_id', $user->id)->orderBy('id','desc')->first();
+
+        if($key != null) {
+            return response()->json(['key' => $key->key], Response::HTTP_OK);
+        }else{
+            return response()->json(['messege' => 'No hay clave vigente creada.'], Response::HTTP_NOT_FOUND);
+        }
     }
     
+    /**
+     * Genera una accesskey aleatoria de 20 caracteres
+     */
     public function store(Request $request)
     {
         $user = auth()->user();
         $key = null;
 
+        // Si existe clave vigente, la retorna
         if(($key = AccessKey::recent()->where('user_id', $user->id)->first()) && $key->count() > 0){
-
-            //return response()->json(['key' => $key], Response::HTTP_OK);
 
             if(Attempt::where('accesskey', $key->key)->get()->count() == 0){
                 return response()->json(['key' => $key->key], Response::HTTP_OK);
@@ -30,6 +42,7 @@ class AccessKeyController extends Controller
 
         }
 
+        // Si no existe clave vigente, la genera y retorna
         $key = AccessKey::create([
             'user_id' => $user->id,
             'key' => fake()->regexify('[A-Za-z0-9]{20}')
@@ -37,11 +50,6 @@ class AccessKeyController extends Controller
 
         return response()->json(['key' => $key->key], Response::HTTP_CREATED);
 
-    }
-
-    public function show($id)
-    {
-        //
     }
 
 }

@@ -8,15 +8,24 @@ use App\Models\Question;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Clse controlador de Respuestas.
+ */
 class AnswerController extends Controller
 {
 
+    /**
+     * Muestra todas las respuestas
+     */
     public function index()
     {
         $answers = Answer::all();
         return response($answers, Response::HTTP_OK);
     }
 
+    /**
+     * Guarda una respuesta para una pregunta
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -42,12 +51,18 @@ class AnswerController extends Controller
 
     }
 
+    /**
+     * Muestra una respuesta {id}
+     */
     public function show($id)
     {
         $answer = Answer::findOrFail($id);
         return response($answer, Response::HTTP_OK);
     }
- 
+
+    /**
+     * Actualiza una respuesta. Solo el texto, no se admite cambio de pregunta
+     */
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -61,6 +76,9 @@ class AnswerController extends Controller
         return response()->json(['updated' => $answer], Response::HTTP_ACCEPTED);
     }
 
+    /**
+     * Elimina una respuesta
+     */
     public function destroy($id)
     {
         Answer::findOrFail($id)->delete();

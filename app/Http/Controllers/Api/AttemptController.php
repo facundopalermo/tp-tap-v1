@@ -50,7 +50,7 @@ class AttemptController extends Controller
         return response()->json(['result' => ['message' => 'Cantidad de intentos superados']], Response::HTTP_NOT_ACCEPTABLE);
     }
 
-    public function newQuiz() {
+    public static function newQuiz() {
 
         $user = auth()->user();
 
@@ -174,7 +174,7 @@ class AttemptController extends Controller
         return response()->json($result, Response::HTTP_OK);
     }
 
-    public function calcResult(array $quiz, array $responses): int {
+    public static function calcResult(array $quiz, array $responses): int {
 
         $points = 0;
 

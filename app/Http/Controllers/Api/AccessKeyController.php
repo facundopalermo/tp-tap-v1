@@ -21,7 +21,7 @@ class AccessKeyController extends Controller
         if($key != null) {
             return response()->json(['key' => $key->key], Response::HTTP_OK);
         }else{
-            return response()->json(['messege' => 'No hay clave vigente creada.'], Response::HTTP_NOT_FOUND);
+            return response()->json(['message' => 'No hay clave vigente creada.'], Response::HTTP_NOT_FOUND);
         }
     }
     

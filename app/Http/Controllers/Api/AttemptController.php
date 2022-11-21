@@ -18,10 +18,11 @@ class AttemptController extends Controller
 
     public function index(){
         $user = auth()->user();
-        $attempt = Attempt::select('id')->where('user_id', $user->id)->where('accesskey', NULL)->where('result', NULL)->where('answered', NULL)->get();
+        $attempt = Attempt::select('id', 'result', 'created_at')->where('user_id', $user->id)->get();
 
         return response()->json(['result' => ['attempt' => $attempt]], Response::HTTP_OK);
     }
+
     /**
      * Genera una nuevo examen
      */
@@ -29,20 +30,24 @@ class AttemptController extends Controller
 
         $user = auth()->user();
 
+        if($user->glasses == null) {
+            return response()->json(['message' => 'post glasses es requerido'], Response::HTTP_NOT_ACCEPTABLE);
+        }
+
         //Si existe un intento sin usar, responde con el id del intento
         if(($attempt = Attempt::select('id')->where('user_id', $user->id)->where('accesskey', NULL)->get()) && $attempt->count() == 1){
 
-            return response()->json(['result' => ['message:' => 'Intento en blanco disponible', 'attempt' => $attempt]], Response::HTTP_OK);
+            return response()->json(['result' => ['message' => 'Intento en blanco disponible', 'attempt' => $attempt]], Response::HTTP_OK);
 
         // Si no existe intento en blanco y no se supera el maximo de 3, se genera un cuestionario y se retorna el id
         }elseif ($attempt = self::newQuiz()) {
 
-            return response()->json(['result' => ['message:' => 'created', 'attempt' => $attempt->id]], Response::HTTP_CREATED);
+            return response()->json(['result' => ['message' => 'created', 'attempt' => $attempt->id]], Response::HTTP_CREATED);
 
         }
 
         // si no hay intento en blanco y se supera los 3 intentos, lo informa
-        return response()->json(['result' => ['message:' => 'Cantidad de intentos superados']], Response::HTTP_NOT_ACCEPTABLE);
+        return response()->json(['result' => ['message' => 'Cantidad de intentos superados']], Response::HTTP_NOT_ACCEPTABLE);
     }
 
     public function newQuiz() {
@@ -55,7 +60,7 @@ class AttemptController extends Controller
             $questions = Question::with(['answers'=> function ($q) {
                 $q->inRandomOrder();
             }])->inRandomOrder()->limit(10)->get();
-    
+
             $attempt = Attempt::create([
                 'user_id' => $user->id,
                 'quiz' => $questions
@@ -81,7 +86,6 @@ class AttemptController extends Controller
 
         //verifica que el intento no este contestado o en proceso de...
         if($attempt->answered != null || $attempt->accesskey != null) {
-            //Resolver resultado
             return response()->json(['message' => 'Este examen ya no puede ser realizado.'], Response::HTTP_IM_USED);
         }
 
@@ -126,8 +130,16 @@ class AttemptController extends Controller
         /* verifica que el intento id exista, o 404 */
         $attempt = Attempt::findorfail($id);
 
+        if($attempt->user_id != auth()->user()->id) {
+            return response()->json(['message' => 'Acceso no autorizado'], Response::HTTP_FORBIDDEN);
+        }
+
+        if($attempt->accesskey != $request->accesskey) {
+            return response()->json(['message' => 'AccessKey invalido'], Response::HTTP_BAD_REQUEST);
+        }
+
         /* si existe, pero ya contiene respuestas, ya fue evaluado */
-        if($attempt->answered != null) {
+        if($attempt->answered != null || $attempt->result != null) {
             return response()->json(['message' => 'Cuestionario ya evaluado'], Response::HTTP_BAD_REQUEST);
         }
 

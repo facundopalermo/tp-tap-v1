@@ -21,7 +21,7 @@ class QuizTimeOut extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Coloca en Ausente aquellos examenes que no se respondieron en una hora';
 
     /**
      * Execute the console command.
@@ -30,8 +30,8 @@ class QuizTimeOut extends Command
      */
     public function handle()
     {
-        $asd = Attempt::where('created_at', '<', Carbon::now()->subMinutes(60))->where('answered', NULL)->whereNotNull('accesskey')->update(['result' => 'Ausente']);
-        $log = '[' . date("Y-m-d H:i:s") . ']: ' . "Intentos sin intentar, como ausentes. " . json_encode($asd);
+        Attempt::where('created_at', '<', Carbon::now()->subMinutes(60))->where('answered', NULL)->whereNotNull('accesskey')->update(['result' => 'Ausente']);
+        $log = '[' . date("Y-m-d H:i:s") . ']: ' . "Intentos sin intentar, como ausentes. ";
         Storage::append("QuizTimeOut.log", $log);
     }
 }

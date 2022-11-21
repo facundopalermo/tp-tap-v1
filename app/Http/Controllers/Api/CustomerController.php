@@ -48,4 +48,7 @@ class CustomerController extends Controller
         ], Response::HTTP_OK);
     }
 
+    public function getAppointment() {
+        return response()->json(['appointments' => Appointment::where('user_id', auth()->user()->id)->get()], Response::HTTP_OK);
+    }
 }

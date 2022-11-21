@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('attempt:clear')->everyMinute();
+        $schedule->command('attempt:clear')->daily();
         $schedule->command('quiz:tout')->everyMinute();
     }
 

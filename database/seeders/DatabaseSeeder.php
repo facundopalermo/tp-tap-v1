@@ -42,7 +42,18 @@ class DatabaseSeeder extends Seeder
             'address' => 'Calle Falsa 234',
             'phone' => '+5491187654321',
             'isAdmin' => false
-       ]);
+        ]);
+
+        User::factory()->create([
+            'name' => 'test',
+            'surname' => 'Test',
+            'email' => 'test@test.com',
+            'password' =>'1234',
+            'dni' => 10000001,
+            'address' => 'calle falsa 123',
+            'phone' => '+54911123456789',
+            'isAdmin' => false
+        ]);
 
        /*
         * Preguntas y respuestas 

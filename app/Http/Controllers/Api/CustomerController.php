@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 
 use App\Models\Appointment;
+use App\Models\DrivingLicense;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,6 +29,10 @@ class CustomerController extends Controller
         $user->glasses = $request->glasses;
         $user->save();
 
+        $dl = new DrivingLicense([
+            'user_id' => auth()->user()->id
+        ]);
+
         //si el usuario requiere lentes, crea un turno nuevo para concurrir presencialmente
         if($user->glasses == true) {
 
@@ -39,8 +45,12 @@ class CustomerController extends Controller
                 ]);
             }
             
+        } else {
+            
+            $dl->visiontest = true;
         }
-
+        
+        $dl->save();
         //si el usuario requiere lentes, retorna el turno generado, caso contrario "No requiere"
         return response()->json([
             'glasses' => $user->glasses,
@@ -50,5 +60,14 @@ class CustomerController extends Controller
 
     public function getAppointment() {
         return response()->json(['appointments' => Appointment::where('user_id', auth()->user()->id)->get()], Response::HTTP_OK);
+    }
+
+    public function getLicense() {
+        $user = User::with('drivinglicense')->find(auth()->user()->id);
+        if($license = $user->drivinglicense->license){
+            return response()->json(['license' => $license], Response::HTTP_OK);
+        }
+
+        return response()->json(['message' => 'no hay licencia emitida para este usuario'], Response::HTTP_NOT_FOUND);
     }
 }

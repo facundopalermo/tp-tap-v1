@@ -17,21 +17,25 @@ Route::middleware(['auth:sanctum'])->group(function () {
     /* USUARIO */
     Route::get('user-profile', [AuthController::class, 'userProfile']);
     Route::post('logout', [AuthController::class, 'logout']);
-
-    Route::post('customers/glasses', [CustomerController::class, 'setGlasses']);
-    Route::get('customers/appointments', [CustomerController::class, 'getAppointment']);
-
-    Route::get('customers/accesskey', [AccessKeyController::class, 'index']);
-    Route::post('customers/accesskey', [AccessKeyController::class, 'store']);
-
+    
     Route::get('customers/attempts', [AttemptController::class, 'index']);
-    Route::post('customers/attempts', [AttemptController::class, 'newAttempt']);
-    Route::get('customers/attempts/{attempt}', [AttemptController::class, 'getAttempt']);
-    Route::post('customers/attempts/{id}', [AttemptController::class, 'answerQuiz']);
+    Route::get('customers/license', [CustomerController::class, 'getLicense']);
+
+    /* USUARIOS SIN LICENCIA */
+    Route::group(['middleware' => 'haslicense'], function () {
+        Route::post('customers/glasses', [CustomerController::class, 'setGlasses']);
+        Route::get('customers/appointments', [CustomerController::class, 'getAppointment']);
+        Route::get('customers/accesskey', [AccessKeyController::class, 'index']);
+        Route::post('customers/accesskey', [AccessKeyController::class, 'store']);
+        Route::post('customers/attempts', [AttemptController::class, 'newAttempt']);
+        Route::get('customers/attempts/{attempt}', [AttemptController::class, 'getAttempt']);
+        Route::post('customers/attempts/{id}', [AttemptController::class, 'answerQuiz']);
+    });
     
     /* ADMIN */
     Route::group(['middleware' => 'admin'], function () {
         Route::get('statistics', [AdminController::class, 'getStatistics']);
+        Route::post('license', [AdminController::class, 'giveLicense']);
     
         Route::resource('questions', QuestionController::class)
                 ->only(['index', 'show', 'store', 'update', 'destroy']);

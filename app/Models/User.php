@@ -69,4 +69,8 @@ class User extends Authenticatable
     public function accesskey () {
         return $this->hasMany(AccessKey::class);
     }
+
+    public function drivinglicense () {
+        return $this->hasOne(DrivingLicense::class);
+    }
 }

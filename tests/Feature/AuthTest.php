@@ -11,6 +11,8 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
+/* NOTA: Los testeos se realizan sin el Middleware de autenticacion ya no consegui forma de pasarlo, ni mediante cookie, headers ni sesion */
+
 class AuthTest extends TestCase
 {
     use InteractsWithAuthentication;

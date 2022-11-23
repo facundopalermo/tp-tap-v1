@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\AccessKey;
 use App\Models\Answer;
 use App\Models\Attempt;
+use App\Models\DrivingLicense;
 use App\Models\Question;
+use App\Models\User;
 use Illuminate\Http\Request;
+use PharIo\Manifest\License;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -155,6 +158,14 @@ class AttemptController extends Controller
             
             $result['result'] = 'Aprobado';
 
+            
+            $license = DrivingLicense::where('user_id', auth()->user()->id)->first();
+            $license->key = $attempt->accesskey;
+            $license->nota = $nota;
+            $license->save();
+            $license->generate(); /* Retorna null si aun falta hacer el test de vista */
+            $result['license'] = $license;
+
         }else{
 
             $result['result'] = 'Reprobado';
@@ -174,6 +185,9 @@ class AttemptController extends Controller
         return response()->json($result, Response::HTTP_OK);
     }
 
+    /**
+     * Funcion que se encarga de evaluar el quiz y las respuestas enviadas por el cliente contra las respuestas validas.
+     */
     public static function calcResult(array $quiz, array $responses): int {
 
         $points = 0;

@@ -20,7 +20,7 @@ class HasLicense
     {
         $user = User::with('drivinglicense')->find(auth()->user()->id);
 
-        if($user->drivinglicense->license){
+        if($user->drivinglicense?->license){
             return response(["message"=>"Usted ya tiene una licencia"], Response::HTTP_OK);
         }
 

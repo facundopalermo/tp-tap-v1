@@ -64,7 +64,7 @@ class CustomerController extends Controller
 
     public function getLicense() {
         $user = User::with('drivinglicense')->find(auth()->user()->id);
-        if($license = $user->drivinglicense->license){
+        if($license = $user->drivinglicense?->license){
             return response()->json(['license' => $license], Response::HTTP_OK);
         }
 

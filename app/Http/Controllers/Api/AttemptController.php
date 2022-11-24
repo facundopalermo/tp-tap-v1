@@ -33,7 +33,7 @@ class AttemptController extends Controller
 
         $user = auth()->user();
 
-        if($user->glasses == null) {
+        if($user->glasses === null) {
             return response()->json(['message' => 'post glasses es requerido'], Response::HTTP_NOT_ACCEPTABLE);
         }
 
